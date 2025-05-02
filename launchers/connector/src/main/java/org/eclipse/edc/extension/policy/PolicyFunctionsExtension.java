@@ -33,7 +33,9 @@ public class PolicyFunctionsExtension implements ServiceExtension {
     private static final String LOCATION_CONSTRAINT_KEY = EDC_NAMESPACE + "country";
     private static final String PARTICIPANT_CONSTRAINT_KEY = EDC_NAMESPACE + "participantId";
     private static final String KEY_POLICY_EVALUATION_TIME = EDC_NAMESPACE + "policyEvaluationTime";
-    
+    private static final String KEY_POLICY_NO_RESTRICTION = EDC_NAMESPACE + "noRestriction";
+    private static final String USER_ID_CONSTRAINT_KEY = EDC_NAMESPACE + "user-id";
+
     @Inject
     private RuleBindingRegistry ruleBindingRegistry;
     @Inject
@@ -59,6 +61,9 @@ public class PolicyFunctionsExtension implements ServiceExtension {
         ruleBindingRegistry.bind(KEY_POLICY_EVALUATION_TIME, CATALOG_SCOPE);
         ruleBindingRegistry.bind(KEY_POLICY_EVALUATION_TIME, NEGOTIATION_SCOPE);
 
+        ruleBindingRegistry.bind(USER_ID_CONSTRAINT_KEY, CATALOG_SCOPE);
+        ruleBindingRegistry.bind(USER_ID_CONSTRAINT_KEY, NEGOTIATION_SCOPE);
+
         LocationConstraintFactory locationConstraint = new LocationConstraintFactory(monitor);
         policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, LOCATION_CONSTRAINT_KEY, locationConstraint.generateRuleFunction());
         policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, LOCATION_CONSTRAINT_KEY, locationConstraint.generateRuleFunction());
@@ -70,5 +75,13 @@ public class PolicyFunctionsExtension implements ServiceExtension {
         TimeConstraintFactory timeConstraint = new TimeConstraintFactory(monitor);
         policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, KEY_POLICY_EVALUATION_TIME, timeConstraint.generateRuleFunction());
         policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, KEY_POLICY_EVALUATION_TIME, timeConstraint.generateRuleFunction());
+
+        NoRestrictionPolicy noRestrictionPolicy = new NoRestrictionPolicy(monitor);
+        policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, KEY_POLICY_NO_RESTRICTION, noRestrictionPolicy.generateRuleFunction());
+        policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, KEY_POLICY_NO_RESTRICTION, noRestrictionPolicy.generateRuleFunction());
+
+        ReferringUserConstraintFunction referringUserConstraintFunction = new ReferringUserConstraintFunction(monitor);
+        policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, USER_ID_CONSTRAINT_KEY, referringUserConstraintFunction.generateRuleFunction());
+        policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, USER_ID_CONSTRAINT_KEY, referringUserConstraintFunction.generateRuleFunction());
     }
 }

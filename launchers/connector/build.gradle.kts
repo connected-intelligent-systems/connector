@@ -74,6 +74,15 @@ dependencies {
     implementation(libs.edc.fc.spi.crawler)
     runtimeOnly(libs.edc.fc.core)
     runtimeOnly(libs.edc.fc.api)
+    // https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt
+    implementation("com.nimbusds:nimbus-jose-jwt:10.2")
+    implementation("org.eclipse.edc:oauth2-core:0.11.1")
+    implementation("org.eclipse.edc:token-core:0.11.1")
+    implementation("org.eclipse.edc:token-lib:0.11.1")
+    implementation("org.eclipse.edc:control-plane-contract:0.11.1")
+    implementation("org.eclipse.edc:contract-spi:0.11.1")
+    implementation("org.eclipse.edc:control-plane-aggregate-services:0.11.1")
+    implementation("org.eclipse.edc:contract-negotiation-api:0.11.1")
 }
 
 application {
