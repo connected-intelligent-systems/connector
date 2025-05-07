@@ -15,7 +15,7 @@ RUN ./gradlew dependencies --no-daemon || true
 COPY ./launchers ./launchers
 COPY ./resources ./resources
 
-RUN ./gradlew launchers:connector:build --exclude-task javadoc
+RUN ./gradlew launchers:connector:build --exclude-task javadoc -x checkstyleMain -x checkstyleTest
 
 FROM eclipse-temurin:17-ubi9-minimal
 

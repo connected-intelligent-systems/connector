@@ -80,8 +80,8 @@ public class PolicyFunctionsExtension implements ServiceExtension {
         policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, KEY_POLICY_NO_RESTRICTION, noRestrictionPolicy.generateRuleFunction());
         policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, KEY_POLICY_NO_RESTRICTION, noRestrictionPolicy.generateRuleFunction());
 
-        ReferringUserConstraintFunction referringUserConstraintFunction = new ReferringUserConstraintFunction(monitor);
-        policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, USER_ID_CONSTRAINT_KEY, referringUserConstraintFunction.generateRuleFunction());
-        policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, USER_ID_CONSTRAINT_KEY, referringUserConstraintFunction.generateRuleFunction());
+//        ReferringUserConstraintFunction referringUserConstraintFunction = new ReferringUserConstraintFunction(monitor);
+//        policyEngine.registerFunction(CatalogPolicyContext.class, Permission.class, USER_ID_CONSTRAINT_KEY, referringUserConstraintFunction.generateRuleFunction());
+//        policyEngine.registerFunction(ContractNegotiationPolicyContext.class, Permission.class, USER_ID_CONSTRAINT_KEY, referringUserConstraintFunction.generateRuleFunction());
     }
 }

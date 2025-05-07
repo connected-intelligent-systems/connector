@@ -44,18 +44,6 @@ public class ParticipantConstraintFactory {
             return switch (operator) {
                 case EQ -> Objects.equals(participantId, rightValue);
                 case NEQ -> !Objects.equals(participantId, rightValue);
-                // case IN -> ((Collection<?>) rightValue).contains(participantId);
-    
-                // Support for the IN case (equivalent to odrl:isPartOf)
-                // Example of request body for policy definition:
-                //                 "constraint": {
-                //                     "@type": "AtomicConstraint",
-                //                     "leftOperand": "participant_id",
-                //                     "operator": {
-                //                         "@id": "odrl:isPartOf"
-                //                         },
-                //                     "rightOperand": "company1, company2, company3"
-                //                 }
                 case IN -> Arrays.stream(rightValue.toString().split(",")).map(String::trim).anyMatch(participantId::equals);
                 case IS_NONE_OF -> !Arrays.stream(rightValue.toString().split(",")).map(String::trim).anyMatch(participantId::equals);
                 default -> false;

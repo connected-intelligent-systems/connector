@@ -29,7 +29,7 @@ public class ReferringUserConstraintFunction {
                     .map(AtomicConstraint.class::cast)
                     .toList();
             Expression leftExpression = constraints.get(0).getLeftExpression();
-            var userId = context.participantAgent().getClaims().get("user-id");
+            var userId = context.participantAgent().getClaims().get("Researcher");
 
 
             monitor.info(format("************ ReferringUserConstraintFunction# Evaluating constraint leftExpression: %s operator: %s rightValue: %s", leftExpression, operator, rightValue.toString()));

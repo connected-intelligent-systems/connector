@@ -1,5 +1,7 @@
 package org.eclipse.edc.extension.contracts;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.ConsumerContractNegotiationManager;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
@@ -19,7 +21,9 @@ import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.transaction.spi.TransactionContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -41,8 +45,9 @@ public class ContractNegotiationServiceCustomImpl extends ContractNegotiationSer
     }
 
     public ContractNegotiation initiateNegotiation(ContractRequest request) {
+        monitor.info("+++++++++++++++++++++ User token details ++++++++++++++++++++++++++++++");
         List<Permission> oldPermissions = new ArrayList<>(request.getContractOffer().getPolicy().getPermissions());
-
+        monitor.info("********** OLD Permissions with token information: " + oldPermissions);
         List<Permission> newPermissions = new ArrayList<>();
         oldPermissions.forEach(permission -> {
             List<Constraint> newConstraints = new ArrayList<>();
@@ -52,25 +57,49 @@ public class ContractNegotiationServiceCustomImpl extends ContractNegotiationSer
             constraints.forEach(constraint -> {
                 Expression userTokenKey = constraint.getLeftExpression();
                 Expression tokenValue = constraint.getRightExpression();
-                monitor.info(format("++++++++++ User token key: %s",  userTokenKey));
-                monitor.info(format("++++++++++ UsertokenValue: %s",  tokenValue));
+                monitor.info(format("User token key: %s",  userTokenKey));
+                monitor.info(format("User tokenValue: %s",  tokenValue.toString()));
                 if(userTokenKey.toString().contains("https://w3id.org/edc/v0.0.1/ns/token")) {
-                    // TODO: now here you have read actual token and extract userID information from it
-                    LiteralExpression leftExp = new LiteralExpression("https://w3id.org/edc/v0.0.1/ns/user-id");
-                    Operator operator = constraint.getOperator();
-                    LiteralExpression rightExp = new LiteralExpression("kaaa");
-                    monitor.info(format("++++++++++ userTokenKey after modification: %s",  leftExp));
-                    monitor.info(format("++++++++++ UsertokenValue after modification: %s",  rightExp));
-                    newConstraints.add(AtomicConstraint.Builder.newInstance()
-                            .leftExpression(leftExp)
-                            .operator(operator)
-                            .rightExpression(rightExp)
-                            .build());
+                    // TODO: now here you have read actual token and extract role information from it
+                    try {
+                        SignedJWT jwt = SignedJWT.parse(tokenValue.toString());
+                        JWTClaimsSet claims = jwt.getJWTClaimsSet();
+                        Map<String, Object> orgRoles = claims.getJSONObjectClaim("orgRoles");
+                        monitor.info(format("JWT TOKEN orgRoles: %s", orgRoles));
+                        monitor.info(format("JWT TOKEN Claims: %s",  claims.toJSONObject()));
+                         String identifiedRole = null;
+                         String identifiedPermission = null;
+                        List<String> values = List.of(Arrays.toString(orgRoles.values().toArray()));
+                        boolean hasResearch = values.stream().map(String::toLowerCase).anyMatch(role -> role.contains("research"));
+                        boolean c = values.stream().map(String::toLowerCase).anyMatch(role -> role.contains("foreststewards"));
+
+                        if(hasResearch){
+                            identifiedRole = "Researcher";
+                            identifiedPermission = "read";
+                        } else if(hasResearch){
+                            identifiedRole = "ForestStewards";
+                            identifiedPermission = "write";
+                        }
+                        monitor.info("identifiedRole: " + identifiedRole);
+                        monitor.info("identifiedPermission: " + identifiedPermission);
+                        LiteralExpression leftExp = new LiteralExpression("https://w3id.org/edc/v0.0.1/ns/"+ identifiedRole);
+                        Operator operator = constraint.getOperator();
+                        LiteralExpression rightExp = new LiteralExpression(identifiedPermission);
+                        monitor.info(format("userTokenKey leftExp after modification: %s",  leftExp));
+                        monitor.info(format("UsertokenValue rightExp after modification: %s",  rightExp));
+                        newConstraints.add(AtomicConstraint.Builder.newInstance()
+                                .leftExpression(leftExp)
+                                .operator(operator)
+                                .rightExpression(rightExp)
+                                .build());
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to parse JWT", e);
+                    }
                 } else {
                     // add all other constraints here
                     newConstraints.add(constraint);
                 }
-                monitor.info("********** new constraint: " + constraint);
+                monitor.info("New modified constraint: " + newConstraints);
             });
             newPermissions.add(Permission.Builder.newInstance()
                     .action(permission.getAction())
@@ -78,7 +107,7 @@ public class ContractNegotiationServiceCustomImpl extends ContractNegotiationSer
                     .duties(permission.getDuties())
                     .build());
         });
-        monitor.info("********** new Permissions: " + newPermissions);
+        monitor.info("New Permissions with role information: " + newPermissions);
         Policy newpolicy = Policy.Builder.newInstance()
                 .prohibitions(request.getContractOffer().getPolicy().getProhibitions())
                 .permissions(newPermissions)
