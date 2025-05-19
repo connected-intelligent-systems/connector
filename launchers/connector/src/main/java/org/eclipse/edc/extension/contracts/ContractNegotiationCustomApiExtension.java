@@ -28,6 +28,10 @@ import java.util.Map;
 import static org.eclipse.edc.connector.controlplane.contract.spi.types.command.TerminateNegotiationCommand.TERMINATE_NEGOTIATION_TYPE;
 import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractRequest.CONTRACT_REQUEST_TYPE;
 
+/**
+ * This extension registers @ContractNegotiationServiceCustomImpl for contract negotiation. However, this extension itself
+ * is not registered in ServiceExtension.
+ */
 public class ContractNegotiationCustomApiExtension   implements ServiceExtension {
     public static final String NAME = "Management API: Contract Negotiation";
 
@@ -52,6 +56,9 @@ public class ContractNegotiationCustomApiExtension   implements ServiceExtension
     @Inject
     private CommandHandlerRegistry commandHandlerRegistry;
 
+    static final String EDC_OAUTH_CLIENT_ID = "edc.oauth.client.id";
+
+
 //    @Inject
 //    private QueryValidator queryValidator;
 
@@ -61,6 +68,8 @@ public class ContractNegotiationCustomApiExtension   implements ServiceExtension
     }
     @Override
     public void initialize(ServiceExtensionContext context) {
+        String edcClientId = context.getConfig().getString(EDC_OAUTH_CLIENT_ID);
+
         var factory = Json.createBuilderFactory(Map.of());
         var monitor = context.getMonitor();
 
@@ -75,7 +84,7 @@ public class ContractNegotiationCustomApiExtension   implements ServiceExtension
         validatorRegistry.register(CONTRACT_REQUEST_TYPE, ContractRequestValidator.instance());
         validatorRegistry.register(TERMINATE_NEGOTIATION_TYPE, TerminateNegotiationValidator.instance());
 
-        ContractNegotiationServiceCustomImpl contractNegotiationServiceCustom = new ContractNegotiationServiceCustomImpl(context.getMonitor(), store, consumerManager, transactionContext, commandHandlerRegistry, QueryValidators.contractNegotiation());
+        ContractNegotiationServiceCustomImpl contractNegotiationServiceCustom = new ContractNegotiationServiceCustomImpl(context.getMonitor(),edcClientId, store, consumerManager, transactionContext, commandHandlerRegistry, QueryValidators.contractNegotiation());
         context.registerService(ContractNegotiationServiceCustomImpl.class, contractNegotiationServiceCustom);
 //        webService.registerResource(ApiContext.MANAGEMENT, new ContractNegotiationApiV2Controller(service, managementApiTransformerRegistry, monitor, validatorRegistry));
         webService.registerResource(ApiContext.MANAGEMENT, new ContractNegotiationApiV3Controller(contractNegotiationServiceCustom, managementApiTransformerRegistry, monitor, validatorRegistry));

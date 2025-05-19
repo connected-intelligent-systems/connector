@@ -83,6 +83,8 @@ dependencies {
     implementation("org.eclipse.edc:contract-spi:0.11.1")
     implementation("org.eclipse.edc:control-plane-aggregate-services:0.11.1")
     implementation("org.eclipse.edc:contract-negotiation-api:0.11.1")
+    // https://mvnrepository.com/artifact/org.locationtech.jts.io/jts-io-common
+    implementation("org.locationtech.jts.io:jts-io-common:1.15.0")
 }
 
 application {

@@ -42,6 +42,8 @@ public class SeedVaultExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
+        //Generate self-signed certificate (public key embedded)
+        //openssl req -new -x509 -key private.key -out public.crt -days 365
         monitor.info("Initializing File Vault Extension");
 
         var vaultFilePath = context.getConfig().getString(VAULT_FILE_PATH);
@@ -59,7 +61,7 @@ public class SeedVaultExtension implements ServiceExtension {
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                monitor.info(format("Adding key %s to vault.", key));
+                monitor.info(format("Adding key %s to vault with value %s.", key, value));
                 vault.storeSecret(key, value);
 
             }

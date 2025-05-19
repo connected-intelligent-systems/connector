@@ -24,19 +24,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
+/**
+ * This class is a custom implementation of the ContractNegotiationServiceImpl.
+ * It overrides the initiateNegotiation method to modify the contract request
+ * based on the user token information. User token is passed as a JWT token.
+ * As of now this implementation is not used in the codebase instead @RolesVerificationPolicy class is used to extract
+ * roles from the JWT token and then used in the contract negotiation process.
+ */
 public class ContractNegotiationServiceCustomImpl extends ContractNegotiationServiceImpl {
     private Monitor monitor;
+
+    private final String edcClientId;
     private final ContractNegotiationStore store;
     private final ConsumerContractNegotiationManager consumerManager;
     private final TransactionContext transactionContext;
     private final CommandHandlerRegistry commandHandlerRegistry;
     private final QueryValidator queryValidator;
-    public ContractNegotiationServiceCustomImpl(Monitor monitor, ContractNegotiationStore store, ConsumerContractNegotiationManager consumerManager, TransactionContext transactionContext, CommandHandlerRegistry commandHandlerRegistry, QueryValidator queryValidator) {
+    public ContractNegotiationServiceCustomImpl(Monitor monitor, String edcClientId, ContractNegotiationStore store, ConsumerContractNegotiationManager consumerManager, TransactionContext transactionContext, CommandHandlerRegistry commandHandlerRegistry, QueryValidator queryValidator) {
         super(store, consumerManager, transactionContext, commandHandlerRegistry, queryValidator);
         this.monitor = monitor;
+        this.edcClientId = edcClientId;
         this.store = store;
         this.consumerManager = consumerManager;
         this.transactionContext = transactionContext;
@@ -45,9 +56,12 @@ public class ContractNegotiationServiceCustomImpl extends ContractNegotiationSer
     }
 
     public ContractNegotiation initiateNegotiation(ContractRequest request) {
-        monitor.info("+++++++++++++++++++++ User token details ++++++++++++++++++++++++++++++");
+        monitor.info("User token details for client: " + edcClientId);
         List<Permission> oldPermissions = new ArrayList<>(request.getContractOffer().getPolicy().getPermissions());
-        monitor.info("********** OLD Permissions with token information: " + oldPermissions);
+        monitor.info("OLD Permissions with token information: " + oldPermissions);
+        if(oldPermissions.isEmpty()){
+            monitor.severe("OLD Permissions does not contain any token information: " + oldPermissions);
+        }
         List<Permission> newPermissions = new ArrayList<>();
         oldPermissions.forEach(permission -> {
             List<Constraint> newConstraints = new ArrayList<>();
@@ -64,21 +78,29 @@ public class ContractNegotiationServiceCustomImpl extends ContractNegotiationSer
                     try {
                         SignedJWT jwt = SignedJWT.parse(tokenValue.toString());
                         JWTClaimsSet claims = jwt.getJWTClaimsSet();
+
+                        //parse org id from the token and compare with client id for associating user with the connector
                         Map<String, Object> orgRoles = claims.getJSONObjectClaim("orgRoles");
                         monitor.info(format("JWT TOKEN orgRoles: %s", orgRoles));
                         monitor.info(format("JWT TOKEN Claims: %s",  claims.toJSONObject()));
                          String identifiedRole = null;
                          String identifiedPermission = null;
+                        Optional<Map.Entry<String, Object>> research = orgRoles.entrySet().stream().filter(entry -> entry.getValue().toString().toLowerCase().contains("research")).findAny();
+                        Optional<Map.Entry<String, Object>> forestStewards = orgRoles.entrySet().stream().filter(entry -> entry.getValue().toString().toLowerCase().contains("foreststewards")).findAny();
+                         monitor.info(format("JWT TOKEN found match for research: %s", research));
+                         monitor.info(format("JWT TOKEN found match for hasForestStewards: %s", forestStewards));
                         List<String> values = List.of(Arrays.toString(orgRoles.values().toArray()));
-                        boolean hasResearch = values.stream().map(String::toLowerCase).anyMatch(role -> role.contains("research"));
-                        boolean c = values.stream().map(String::toLowerCase).anyMatch(role -> role.contains("foreststewards"));
+//                        boolean hasResearch = values.stream().map(String::toLowerCase).anyMatch(role -> role.contains("research"));
+//                        boolean hasForestStewards = values.stream().map(String::toLowerCase).anyMatch(role -> role.contains("foreststewards"));
 
-                        if(hasResearch){
+                        if(research.isPresent() && "org".concat(research.get().getKey()).equalsIgnoreCase(edcClientId)){
                             identifiedRole = "Researcher";
                             identifiedPermission = "read";
-                        } else if(hasResearch){
+                        } else if(forestStewards.isPresent() && "org".concat(forestStewards.get().getKey()).equalsIgnoreCase(edcClientId)){
                             identifiedRole = "ForestStewards";
                             identifiedPermission = "write";
+                        } else {
+                            monitor.severe("User token does not contain valid role information or client id does not match with the token research: " + research + " | forestStewards: " + forestStewards + " | edcClientId: " + edcClientId);
                         }
                         monitor.info("identifiedRole: " + identifiedRole);
                         monitor.info("identifiedPermission: " + identifiedPermission);

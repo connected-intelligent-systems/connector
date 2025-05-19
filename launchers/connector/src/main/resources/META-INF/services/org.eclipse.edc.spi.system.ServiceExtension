@@ -1,4 +1,3 @@
 org.eclipse.edc.extension.policy.PolicyFunctionsExtension
 org.eclipse.edc.extension.vault.SeedVaultExtension
 org.eclipse.edc.extension.fc.FederatedCatalogServicesExtension
-org.eclipse.edc.extension.contracts.ContractNegotiationCustomApiExtension
