@@ -120,4 +120,9 @@ public class InMemoryNodeDirectory implements TargetNodeDirectory {
     public void insert(TargetNode node) {
 
     }
+
+    @Override
+    public TargetNode remove(String id) {
+        return null;
+    }
 }

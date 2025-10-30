@@ -4,15 +4,15 @@ format.version = "1.1"
 [versions]
 assertj = "3.26.3"
 awaitility = "4.2.2"
-edc = "0.11.1"
+edc = "0.14.1"
 jakarta-json = "2.0.1"
 junit-pioneer = "2.2.0"
 jupiter = "5.11.3"
-okhttp-mockwebserver = "5.0.0-alpha.14"
+okhttp-mockwebserver = "5.2.1"
 restAssured = "5.5.0"
 rsApi = "4.0.0"
 testcontainers = "1.20.3"
-postgresql = "42.7.3"
+postgresql = "42.7.8"
 
 [libraries]
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
@@ -46,7 +46,7 @@ edc-data-plane-util = { module = "org.eclipse.edc:data-plane-util", version.ref 
 edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
 edc-iam-mock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }
-edc-oauth2-core = { module = "org.eclipse.edc:oauth2-core", version.ref = "edc" }
+edc-oauth2-core = { module = "org.eclipse.edc:oauth2-client", version.ref = "edc" }
 edc-oauth2-client = { module = "org.eclipse.edc:oauth2-client", version.ref = "edc" }
 edc-jersey-micrometer = { module = "org.eclipse.edc:jersey-micrometer", version.ref = "edc" }
 edc-jetty-micrometer = { module = "org.eclipse.edc:jetty-micrometer", version.ref = "edc" }
@@ -62,7 +62,6 @@ edc-sql-pool-apache-commons ={module = "org.eclipse.edc:sql-pool-apache-commons"
 edc-transfer-data-plane = { module = "org.eclipse.edc:transfer-data-plane", version.ref = "edc" }
 edc-transfer-process-api = { module = "org.eclipse.edc:transfer-process-api", version.ref = "edc" }
 edc-transfer-process-store-sql= { module = "org.eclipse.edc:transfer-process-store-sql", version.ref = "edc" }
-edc-transfer-pull-http-dynamic-receiver = { module = "org.eclipse.edc:transfer-pull-http-dynamic-receiver", version.ref = "edc" }
 edc-transaction-local  = { module = "org.eclipse.edc:transaction-local", version.ref = "edc" }
 edc-transaction-datasource-spi = { module = "org.eclipse.edc:transaction-datasource-spi", version.ref = "edc" }
 edc-util = { module = "org.eclipse.edc:util", version.ref = "edc" }
@@ -93,7 +92,6 @@ edc-edr-index-sql = { module = "org.eclipse.edc:edr-index-sql", version.ref = "e
 edc-management-api-test-fixtures = { module = "org.eclipse.edc:management-api-test-fixtures", version.ref = "edc" }
 edc-provision-aws-s3 = { module = "org.eclipse.edc.aws:provision-aws-s3", version.ref = "edc" }
 edc-transfer-data-plane-signaling = { module = "org.eclipse.edc:transfer-data-plane-signaling", version.ref = "edc" }
-edc-transfer-pull-http-receiver = { module = "org.eclipse.edc:transfer-pull-http-dynamic-receiver", version.ref = "edc" }
 edc-vault-azure = { module = "org.eclipse.edc.azure:vault-azure", version.ref = "edc" }
 edc-validator-data-address-http-data = { module = "org.eclipse.edc:validator-data-address-http-data", version.ref = "edc" }
 opentelemetry-exporter-otlp = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version = "1.41.0" }
