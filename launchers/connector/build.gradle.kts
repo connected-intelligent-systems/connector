@@ -19,6 +19,12 @@ plugins {
     id(libs.plugins.swagger.get().pluginId)
 }
 
+configurations.all {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 23)
+    }
+}
+
 dependencies {
     implementation(libs.edc.control.api.configuration)
     implementation(libs.edc.control.plane.api.client)
@@ -72,6 +78,9 @@ dependencies {
 
     implementation(libs.edc.fc.spi.crawler)
 
+    implementation("de.fraunhofer.iosb:edc-extension4aas")
+    implementation("de.fraunhofer.iosb:edc-connector-client")
+
     runtimeOnly(libs.edc.iam.mock)
     runtimeOnly(libs.edc.fc.core)
     runtimeOnly(libs.edc.fc.api)
@@ -85,6 +94,7 @@ var distTar = tasks.getByName("distTar")
 var distZip = tasks.getByName("distZip")
 
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    isZip64 = true
     mergeServiceFiles()
     archiveFileName.set("connector.jar")
     dependsOn(distTar, distZip)

@@ -1,0 +1,3 @@
+[submodule "extensions/edc-extension-for-aas"]
+	path = extensions/edc-extension-for-aas
+	url = https://github.com/FraunhoferIOSB/EDC-Extension-for-AAS.git

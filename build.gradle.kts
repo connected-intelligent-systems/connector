@@ -31,12 +31,6 @@ val edcGradlePluginsVersion: String by project
 allprojects {
     apply(plugin = "${group}.edc-build")
 
-    // configure which version of the annotation processor to use. defaults to the same version as the plugin
-    configure<org.eclipse.edc.plugins.autodoc.AutodocExtension> {
-        outputDirectory.set(project.buildDir)
-        processorVersion.set(edcGradlePluginsVersion)
-    }
-
     configure<CheckstyleExtension> {
         configFile = rootProject.file("resources/edc-checkstyle-config.xml")
         configDirectory.set(rootProject.file("resources"))

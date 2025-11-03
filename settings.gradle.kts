@@ -14,4 +14,14 @@
 
 rootProject.name = "connector"
 
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// Include EDC-Extension-for-AAS as composite build
+includeBuild("extensions/edc-extension-for-aas")
+
 include(":launchers:connector")
