@@ -50,7 +50,7 @@ dependencies {
 
     implementation(libs.edc.data.plane.aws.s3)
 
-    implementation(libs.edc.oauth2.core)
+
     implementation(libs.edc.oauth2.client)
 
     implementation(libs.edc.api.observability)
@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.edc.transaction.datasource.spi)
 
     implementation(libs.edc.fc.spi.crawler)
+
+    runtimeOnly(libs.edc.iam.mock)
     runtimeOnly(libs.edc.fc.core)
     runtimeOnly(libs.edc.fc.api)
 }
