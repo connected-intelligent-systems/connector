@@ -2,11 +2,12 @@ name: Create and publish a Docker image
 
 on:
   push:
-    tags: 
+    tags:
       - '*'
     branches:
       - 'main'
       - 'develop'
+      - 'aas'
 
 env:
   REGISTRY: ghcr.io
@@ -21,6 +22,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
