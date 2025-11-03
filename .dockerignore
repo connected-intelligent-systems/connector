@@ -1,0 +1,41 @@
+# Build outputs
+**/build/
+**/bin/
+**/target/
+*.jar
+*.war
+
+# Gradle
+.gradle/
+
+# Git
+.git/
+.gitignore
+.gitmodules
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Documentation
+*.md
+LICENSE
+
+# Development setup
+dev-setup/
+
+# Logs
+logs/
+*.log

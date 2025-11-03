@@ -19,12 +19,6 @@ plugins {
     id(libs.plugins.swagger.get().pluginId)
 }
 
-configurations.all {
-    attributes {
-        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 23)
-    }
-}
-
 dependencies {
     implementation(libs.edc.control.api.configuration)
     implementation(libs.edc.control.plane.api.client)

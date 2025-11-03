@@ -7,17 +7,18 @@ COPY ./build.gradle.kts ./build.gradle.kts
 COPY ./gradle.properties ./gradle.properties
 COPY ./gradlew ./gradlew
 COPY ./settings.gradle.kts ./settings.gradle.kts
+COPY ./extensions ./extensions
 
 RUN chmod +x ./gradlew
 
-RUN ./gradlew dependencies --no-daemon || true
+RUN ./gradlew dependencies --no-daemon --refresh-dependencies || true
 
 COPY ./launchers ./launchers
 COPY ./resources ./resources
 
-RUN ./gradlew launchers:connector:build --exclude-task javadoc
+RUN ./gradlew launchers:connector:build --exclude-task javadoc --no-daemon
 
-FROM eclipse-temurin:17-ubi9-minimal
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
