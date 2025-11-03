@@ -20,64 +20,27 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.edc.control.api.configuration)
-    implementation(libs.edc.control.plane.api.client)
-    implementation(libs.edc.control.plane.api)
-    implementation(libs.edc.control.plane.core)
-    implementation(libs.edc.dsp)
-    implementation(libs.edc.configuration.filesystem)
-    implementation(libs.edc.management.api)
-    implementation(libs.edc.transfer.data.plane.signaling)
-    implementation(libs.edc.validator.data.address.http.data)
-
-    implementation(libs.edc.token.core)
-    implementation(libs.edc.http)
-    implementation(libs.edc.data.plane.iam)
-
-    implementation(libs.edc.edr.cache.api)
-    implementation(libs.edc.edr.store.core)
-    implementation(libs.edc.edr.store.receiver)
-    implementation(libs.edc.edr.index.sql)
-
-    implementation(libs.edc.data.plane.selector.api)
-    implementation(libs.edc.data.plane.selector.core)
-
-    implementation(libs.edc.data.plane.self.registration)
-    implementation(libs.edc.data.plane.signaling.api)
-    implementation(libs.edc.data.plane.public.api)
-    implementation(libs.edc.data.plane.core)
-    implementation(libs.edc.data.plane.http)
-
-    implementation(libs.edc.data.plane.aws.s3)
-
-
-    implementation(libs.edc.oauth2.client)
-
-    implementation(libs.edc.api.observability)
-
-    implementation(libs.edc.asset.index.sql)
-    implementation(libs.edc.contract.definition.store.sql)
-    implementation(libs.edc.contract.negotiation.store.sql)
-    implementation(libs.edc.control.plane.sql)
-    implementation(libs.edc.policy.definition.store.sql)
-    implementation(libs.edc.transfer.process.store.sql)
-    implementation(libs.edc.data.plane.store.sql)
-    implementation(libs.edc.data.plane.instance.store.sql)
-    implementation(libs.edc.accesstokendata.store.sql)
-
-    implementation(libs.edc.sql.pool.apache.commons)
-    implementation(libs.postgresql)
-    implementation(libs.edc.transaction.local)
-    implementation(libs.edc.transaction.datasource.spi)
-
+    api(libs.edc.data.plane.spi)
+    api(libs.edc.json.ld.spi)
+    
     implementation(libs.edc.fc.spi.crawler)
-
+    implementation(libs.edc.iam.mock)
     implementation("de.fraunhofer.iosb:edc-extension4aas")
     implementation("de.fraunhofer.iosb:edc-connector-client")
 
-    runtimeOnly(libs.edc.iam.mock)
-    runtimeOnly(libs.edc.fc.core)
-    runtimeOnly(libs.edc.fc.api)
+    runtimeOnly(libs.edc.bom.controlplane) {
+        exclude(group = "org.eclipse.edc", module = "identity-trust-sts-remote-client")
+        exclude(group = "org.eclipse.edc", module = "identity-trust-core")
+        exclude(group = "org.eclipse.edc", module = "identity-trust-transform")
+        exclude(group = "org.eclipse.edc", module = "identity-trust-issuers-configuration")
+    }
+    runtimeOnly(libs.edc.bom.dataplane) {
+        exclude(group = "org.eclipse.edc", module = "data-plane-iam")
+    }
+    runtimeOnly(libs.edc.bom.dataplane.sql)
+    runtimeOnly(libs.edc.bom.controlplane.sql)
+    runtimeOnly(libs.edc.api.secrets)
+    runtimeOnly(libs.edc.dataplane.v2)
 }
 
 application {

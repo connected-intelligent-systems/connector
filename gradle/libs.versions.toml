@@ -107,6 +107,17 @@ edc-fc-core = { module = "org.eclipse.edc:federated-catalog-core", version.ref =
 edc-fc-api = { module = "org.eclipse.edc:federated-catalog-api", version.ref = "edc" }
 edc-fc-cache-sql = { module = "org.eclipse.edc:federated-catalog-cache-sql", version.ref = "edc" }
 
+edc-api-secrets = { module = "org.eclipse.edc:secrets-api", version.ref = "edc" }
+edc-dataplane-v2 = { module = "org.eclipse.edc:data-plane-public-api-v2", version.ref = "edc" }
+edc-bom-controlplane = { module = "org.eclipse.edc:controlplane-dcp-bom", version.ref = "edc" }
+edc-bom-dataplane = { module = "org.eclipse.edc:dataplane-base-bom", version.ref = "edc" }
+edc-bom-controlplane-sql = { module = "org.eclipse.edc:controlplane-feature-sql-bom", version.ref = "edc" }
+edc-bom-dataplane-sql = { module = "org.eclipse.edc:dataplane-feature-sql-bom", version.ref = "edc" }
+edc-bom-identityhub = { module = "org.eclipse.edc:identityhub-bom", version.ref = "edc" }
+edc-bom-identityhub-sql = { module = "org.eclipse.edc:identityhub-feature-sql-bom", version.ref = "edc" }
+edc-bom-issuerservice = { module = "org.eclipse.edc:issuerservice-bom", version.ref = "edc" }
+edc-bom-issuerservice-sql = { module = "org.eclipse.edc:issuerservice-feature-sql-bom", version.ref = "edc" }
+
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 swagger = { id = "io.swagger.core.v3.swagger-gradle-plugin", version = "2.2.27" }
