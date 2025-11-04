@@ -22,11 +22,12 @@ plugins {
 dependencies {
     api(libs.edc.data.plane.spi)
     api(libs.edc.json.ld.spi)
-    
+
     implementation(libs.edc.fc.spi.crawler)
     implementation(libs.edc.iam.mock)
     implementation("de.fraunhofer.iosb:edc-extension4aas")
     implementation("de.fraunhofer.iosb:edc-connector-client")
+    implementation("de.fraunhofer.iosb:data-plane-aas")
 
     runtimeOnly(libs.edc.bom.controlplane) {
         exclude(group = "org.eclipse.edc", module = "identity-trust-sts-remote-client")
@@ -34,13 +35,25 @@ dependencies {
         exclude(group = "org.eclipse.edc", module = "identity-trust-transform")
         exclude(group = "org.eclipse.edc", module = "identity-trust-issuers-configuration")
     }
-    runtimeOnly(libs.edc.bom.dataplane) {
-        exclude(group = "org.eclipse.edc", module = "data-plane-iam")
-    }
+    runtimeOnly(libs.edc.bom.dataplane)
     runtimeOnly(libs.edc.bom.dataplane.sql)
     runtimeOnly(libs.edc.bom.controlplane.sql)
     runtimeOnly(libs.edc.api.secrets)
     runtimeOnly(libs.edc.dataplane.v2)
+
+    // Data plane components required for transfers
+    runtimeOnly(libs.edc.data.plane.selector.api)
+    runtimeOnly(libs.edc.data.plane.selector.core)
+    runtimeOnly(libs.edc.data.plane.self.registration)
+    runtimeOnly(libs.edc.data.plane.signaling.api)
+    runtimeOnly(libs.edc.transfer.data.plane.signaling)
+    runtimeOnly(libs.edc.validator.data.address.http.data)
+
+    // EDR (Endpoint Data Reference) components
+    runtimeOnly(libs.edc.edr.cache.api)
+    runtimeOnly(libs.edc.edr.store.core)
+    runtimeOnly(libs.edc.edr.store.receiver)
+    runtimeOnly(libs.edc.edr.index.sql)
 }
 
 application {
