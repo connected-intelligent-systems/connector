@@ -23,7 +23,6 @@ dependencies {
     api(libs.edc.data.plane.spi)
     api(libs.edc.json.ld.spi)
 
-    implementation(libs.edc.fc.spi.crawler)
     implementation(libs.edc.iam.mock)
     implementation("de.fraunhofer.iosb:edc-extension4aas")
     implementation("de.fraunhofer.iosb:edc-connector-client")
@@ -54,6 +53,11 @@ dependencies {
     runtimeOnly(libs.edc.edr.store.core)
     runtimeOnly(libs.edc.edr.store.receiver)
     runtimeOnly(libs.edc.edr.index.sql)
+
+    // Federated Catalog
+    implementation(libs.edc.fc.spi.crawler)
+    runtimeOnly(libs.edc.fc.core)
+    runtimeOnly(libs.edc.fc.api)
 }
 
 application {
