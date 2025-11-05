@@ -106,6 +106,7 @@ edc-fc-spi-crawler = { module = "org.eclipse.edc:crawler-spi", version.ref = "ed
 edc-fc-core = { module = "org.eclipse.edc:federated-catalog-core", version.ref = "edc" }
 edc-fc-api = { module = "org.eclipse.edc:federated-catalog-api", version.ref = "edc" }
 edc-fc-cache-sql = { module = "org.eclipse.edc:federated-catalog-cache-sql", version.ref = "edc" }
+edc-federatedcatalog-base-bom = { module = "org.eclipse.edc:federatedcatalog-base-bom", version.ref = "edc" }
 
 edc-api-secrets = { module = "org.eclipse.edc:secrets-api", version.ref = "edc" }
 edc-dataplane-v2 = { module = "org.eclipse.edc:data-plane-public-api-v2", version.ref = "edc" }
